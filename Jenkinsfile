@@ -45,9 +45,8 @@ pipeline {
         
                     script {
                         sh '''
-                            echo $USERNAME > tmp
-                            echo $PASSWORD >> tmp
-                            sh 'cat tmp'
+                            echo $USERNAME 
+                            echo $PASSWORD
                             '''
                         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker pull sunil34/train-schedule:${env.BUILD_NUMBER}\""
                         try {
