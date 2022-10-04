@@ -42,9 +42,13 @@ pipeline {
                 input 'Deploy to Production'
                 milestone(1)
                 withCredentials ([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
-                    echo $USERNAME
-                    echo $USERPASS
+        
                     script {
+                        sh '''
+                            echo $USERNAME > tmp
+                            echo $PASSWORD >> tmp
+                            sh 'cat tmp'
+                            '''
                         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker pull sunil34/train-schedule:${env.BUILD_NUMBER}\""
                         try {
                             sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@${env.prod_ip} \"docker stop train-schedule\""
